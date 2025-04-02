@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <!-- 新增菜单选项 -->
+    <string-array name="menu_options_array">
+        <item>Smile</item>
+        <item>Frown</item>
+        <item>Sleep</item>
+        <item>Default</item>
+        <item>SakiSakiSaki</item>
+        <item>Connect to Bluetooth</item>
+    </string-array>
+
+
+
+</resources>

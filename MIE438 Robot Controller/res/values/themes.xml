@@ -1,0 +1,9 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- 亮色主题 -->
+    <style name="Theme.MIE438RobotController" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- 可以在这里添加自定义颜色 -->
+        <item name="colorPrimary">@color/purple_500</item>
+        <item name="colorPrimaryVariant">@color/purple_700</item>
+        <item name="colorOnPrimary">@color/white</item>
+    </style>
+</resources>

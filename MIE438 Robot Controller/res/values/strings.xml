@@ -1,0 +1,54 @@
+<resources>
+
+    <string name="app_name">ESP32 机器人控制器</string>
+
+
+    <string name="scan_devices">扫描设备</string>
+    <string name="status_disconnected">Disconnected</string>
+    <string name="status_connected">Connected</string>
+    <string name="get_status">获取状态</string>
+    <string name="robot_response">机器人响应:</string>
+
+
+    <!-- 主界面文字 -->
+    <string name="connection_status">Status:</string>
+    <string name="menu">Menu</string>
+    <string name="viewCommands">View</string>
+    <string name="copyright">Developed by Hoshipu \npixiv ID: 106984463 ; Artist：春日いづれ</string>
+
+    <string name="moving_status">状态: 停止</string>
+    <string name="speed_label">Speed</string>
+    <string name="lcd_selection">LCD 内容选择:</string>
+
+    <!-- 方向控制按钮 -->
+    <string name="forward">↑</string>
+    <string name="backward">↓</string>
+    <string name="stop">⭘</string>
+    <string name="forward_left">↖</string>
+    <string name="forward_right">↗</string>
+    <string name="backward_left">↙</string>
+    <string name="backward_right">↘</string>
+    <string name="left">⟲</string>
+    <string name="right">⟳</string>
+
+    <string name="speed_control">速度调节:</string>
+
+
+    <!-- LCD选项 -->
+    <string name="lcd_option1">显示距离</string>
+    <string name="lcd_option2">显示速度</string>
+    <string name="lcd_option3">显示电池</string>
+    <string name="lcd_option4">自定义文本</string>
+
+
+
+    <!-- 添加以下蓝牙相关字符串 -->
+    <string name="select_device">选择蓝牙设备</string>
+    <string name="bt_connecting">正在连接: %s</string>
+    <string name="bt_connected">已连接: %s</string>
+    <string name="bt_disconnected">蓝牙未连接</string>
+    <string name="bt_not_supported">设备不支持蓝牙</string>
+    <string name="bt_not_enabled">请先启用蓝牙</string>
+
+
+</resources>
