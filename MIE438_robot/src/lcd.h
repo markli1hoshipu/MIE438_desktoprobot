@@ -5,6 +5,13 @@
 #include <TFT_eSPI.h>
 #include <Arduino.h>
 
+// 表情定义常量
+#define LCD_EMOJI_DEFAULT 0
+#define LCD_EMOJI_SMILE 1
+#define LCD_EMOJI_FROWN 2
+#define LCD_EMOJI_SLEEP 3
+#define LCD_EMOJI_SPECIAL 4
+
 class LCDController {
 public:
     LCDController();
@@ -13,28 +20,11 @@ public:
     // 基本显示功能
     void clear();
     void displayWelcome();
-    void displayStatus(bool connected, int battery = 100);
-    void displayCommand(const String &command);
-    
-    // 运动状态显示
-    void showForward();
-    void showBackward();
-    void showLeft();
-    void showRight();
-    void showStop();
+        
     void showStandby();
+
+    void showEmoji(int emojiType);
     
-    // 其他功能显示
-    void showBatteryLevel(int percentage);
-    void showConnectionStatus(bool connected);
-    void showSensorValue(const String &sensorName, int value);
-    
-    // 进度条和动画
-    void drawProgressBar(int x, int y, int width, int height, int percentage);
-    void drawCompass(int heading);
-    
-    // 更新屏幕信息
-    void updateScreen();
 
 private:
     TFT_eSPI _tft;
@@ -45,19 +35,10 @@ private:
     static const int INFO_AREA_HEIGHT = 150;
     static const int CONTROL_AREA_HEIGHT = 90;
     
-    // 内部状态
-    bool _isConnected;
-    int _batteryLevel;
-    String _currentCommand;
-    String _statusMessage;
-    unsigned long _lastUpdate;
-    
     // 内部辅助函数
-    void drawStatusBar();
-    void drawCommandArea();
-    void drawInfoArea();
-    void drawControlArea();
     void rainbow_fill();
+    void drawProgressBar(int x, int y, int width, int height, int percentage);
+    void drawEmoji(int emojiType, int x, int y, int size);
 };
 
 #endif

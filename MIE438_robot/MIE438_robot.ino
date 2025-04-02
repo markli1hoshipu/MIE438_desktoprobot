@@ -13,11 +13,11 @@ LCDController lcd;
 BluetoothSerial SerialBT;
 bool isConnected = false; // 是否连接到Android设备
 unsigned long lastCommandTime = 0; // 上次收到指令的时间
-const unsigned long standbyTimeout = 5000; // 5秒无指令进入待机状态
+const unsigned long standbyTimeout = 10000; // 10秒无指令进入待机状态
 
-// 电池电量模拟
-int batteryLevel = 100;
-unsigned long lastBatteryUpdate = 0;
+
+// 全局速度设置
+int globalSpeed = 70; // 默认速度为70%
 
 // 处理蓝牙命令
 void processCommand(String command);
@@ -37,8 +37,6 @@ void setup() {
   
   Serial.println("ESP32 Ready - MIE438 Robot");
   
-  // 更新LCD显示状态
-  lcd.displayStatus(isConnected, batteryLevel);
 }
 
 void loop() {
@@ -47,7 +45,6 @@ void loop() {
     if (!isConnected) {
       isConnected = true;
       Serial.println("Connected to Android");
-      lcd.showConnectionStatus(true);
     }
     
     // 处理蓝牙数据
@@ -65,7 +62,6 @@ void loop() {
     if (isConnected) {
       isConnected = false;
       Serial.println("Disconnected from Android");
-      lcd.showConnectionStatus(false);
     }
   }
 
@@ -74,7 +70,7 @@ void loop() {
     static unsigned long lastStandbyTime = 0;
     
     // 每10秒执行一次待机模式动作，避免频繁动作
-    if (millis() - lastStandbyTime > 10000) {
+    if (millis() - lastStandbyTime > 60000) { // 每分钟进行一次待机模式动作
       Serial.println("Entering standby mode");
       motor.standbyMode();
       lcd.showStandby();
@@ -82,12 +78,6 @@ void loop() {
     }
   }
   
-  // 模拟电池电量下降（每分钟下降1%）
-  if (millis() - lastBatteryUpdate > 60000) {
-    batteryLevel = max(0, batteryLevel - 1);
-    lcd.showBatteryLevel(batteryLevel);
-    lastBatteryUpdate = millis();
-  }
 }
 
 // 处理蓝牙命令
@@ -95,51 +85,71 @@ void processCommand(String command) {
   Serial.print("Command received: ");
   Serial.println(command);
   
-  // 将命令显示在LCD上
-  lcd.displayCommand(command);
-  
   // 动作指令
   if (command == "FORWARD") {
-    lcd.showForward();
-    motor.moveForward(MOVE_DURATION, 70);
-    lcd.showStop();
+    motor.moveForward(MOVE_DURATION, globalSpeed);
   } 
   else if (command == "BACKWARD") {
-    lcd.showBackward();
-    motor.moveBackward(MOVE_DURATION, 70);
-    lcd.showStop();
+    motor.moveBackward(MOVE_DURATION, globalSpeed);
   }
   else if (command == "LEFT") {
-    lcd.showLeft();
-    motor.forwardLeftTurn(TURN_DURATION, 60);
-    lcd.showStop();
+    motor.leftRotate(TURN_DURATION, globalSpeed);
   }
   else if (command == "RIGHT") {
-    lcd.showRight();
-    motor.forwardRightTurn(TURN_DURATION, 60);
-    lcd.showStop();
+    motor.rightRotate(TURN_DURATION, globalSpeed);
   }
   else if (command == "STOP") {
     motor.allStop();
-    lcd.showStop();
+  }
+  else if (command == "FLEFT") {
+    motor.forwardLeftTurn(TURN_DURATION, globalSpeed);
+  }
+  else if (command == "FRIGHT") {
+    motor.forwardRightTurn(TURN_DURATION, globalSpeed);
+  }
+  else if (command == "BLEFT") {
+    motor.backwardLeftTurn(TURN_DURATION, globalSpeed);
+  }
+  else if (command == "BRIGHT") {
+    motor.backwardRightTurn(TURN_DURATION, globalSpeed);
   }
   
   // 速度控制命令 (格式：SPEED:X，X=1-100)
   else if (command.startsWith("SPEED:")) {
     int speed = command.substring(6).toInt();
-    if (speed >= 1 && speed <= 100) {
-      // 这里可以保存速度设置供后续命令使用
+    if (speed >= 0 && speed <= 100) {
+      globalSpeed = speed;
       SerialBT.println("Speed set to " + String(speed));
+    } else {
+      SerialBT.println("Invalid speed value. Use 0-100");
     }
   }
   
-  // 状态查询命令
-  else if (command == "STATUS") {
-    String status = "Robot status: ";
-    status += isConnected ? "Connected" : "Disconnected";
-    status += ", Battery: " + String(batteryLevel) + "%";
-    SerialBT.println(status);
+  // 菜单命令处理
+  else if (command.startsWith("MENU:")) {
+    String menuOption = command.substring(5);
+    if (menuOption == "Smile") {
+      lcd.showEmoji(LCD_EMOJI_SMILE);
+    }
+    else if (menuOption == "Frown") {
+      lcd.showEmoji(LCD_EMOJI_FROWN);
+    }
+    else if (menuOption == "Sleep") {
+      lcd.showEmoji(LCD_EMOJI_SLEEP);
+    }
+    else if (menuOption == "Default") {
+      motor.standbyMode();
+      lcd.showStandby();
+    }
+    else if (menuOption == "SakiSakiSaki") {
+      motor.SakiMode();
+      lcd.showEmoji(LCD_EMOJI_SPECIAL);
+    }
+    else {
+      SerialBT.println("Unknown menu option: " + menuOption);
+    }
   }
+
   else {
     SerialBT.println("Unknown command: " + command);
   }

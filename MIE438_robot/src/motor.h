@@ -10,6 +10,7 @@ public:
     MotorController();
     void begin();
     void standbyMode();
+    void SakiMode();
     
     // 更新后的运动函数
     void moveForward(int duration, int speed = 10);
@@ -18,6 +19,8 @@ public:
     void backwardRightTurn(int duration, int speed = 10);
     void forwardLeftTurn(int duration, int speed = 10);
     void backwardLeftTurn(int duration, int speed = 10);
+    void leftRotate(int duration, int speed = 10); //counter-clockwise
+    void rightRotate(int duration, int speed = 10); //clockwise
     void allStop();
     
 private:
